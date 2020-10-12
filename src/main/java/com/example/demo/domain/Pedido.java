@@ -1,10 +1,8 @@
 package com.example.demo.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -35,13 +36,16 @@ public class Pedido implements Serializable {
 	@EqualsAndHashCode.Include
 	private Integer id;
 	
+	@JsonFormat(pattern="dd/MM/yyyy HH:mm")
 	private Date instante;
 	
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="pedido")
+	@JsonManagedReference
 	private Pagamento pagamento;
 	
 	@ManyToOne
 	@JoinColumn(name="cliente_id")
+	@JsonManagedReference
 	private Cliente cliente;
 	
 	@ManyToOne
@@ -59,13 +63,4 @@ public class Pedido implements Serializable {
 		this.enderecoDeEntrega = enderecoDeEntrega;
 	}
 	
-	public List<Pedido> getPedidos() {
-		List<Pedido> lista = new ArrayList<>();
-		
-		for (ItemPedido x : itens) {
-			lista.add(x.getPedido());
-		}
-		
-		return lista;
-	}
 }
